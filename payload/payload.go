@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"strings"
+
+	"github.com/lowply/webhook/logger"
 )
 
 type Payload struct {
@@ -104,7 +106,7 @@ func Buffer2payload(b *bytes.Buffer) Payload {
 	var p Payload
 	err := decoder.Decode(&p)
 	if err != nil {
-		err.Error()
+		logger.Log("Failed to decode payload")
 	}
 	return p
 }

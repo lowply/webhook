@@ -5,32 +5,43 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
+	"errors"
 	"net/http"
 	"strings"
 
-	"../config"
+	"github.com/lowply/webhook/config"
 )
 
-func ValidateRequest(b *bytes.Buffer, r *http.Request) bool {
+func validateXhubsig(b *bytes.Buffer, sig string) error {
 	c := config.GetConfig()
 
-	if r.Method != "POST" {
-		return false
-	}
-
-	if r.Header.Get("X-Hub-Signature") == "" {
-		return false
-	}
-
-	xhubsig := strings.Replace(r.Header.Get("X-Hub-Signature"), "sha1=", "", -1)
+	xhubsig := strings.Replace(sig, "sha1=", "", -1)
 	key := c.Key
 	mac := hmac.New(sha1.New, []byte(key))
 	mac.Write(b.Bytes())
 
-	// Check Signature
 	if hex.EncodeToString(mac.Sum(nil)) != xhubsig {
-		return false
+		return errors.New("")
 	}
 
-	return true
+	return nil
+}
+
+func ValidateRequest(b *bytes.Buffer, r *http.Request) error {
+	sig := r.Header.Get("X-Hub-Signature")
+
+	if r.Method != "POST" {
+		return errors.New("Request was not POST")
+	}
+
+	if sig == "" {
+		return errors.New("X-Hub-Signature is empty")
+	}
+
+	err := validateXhubsig(b, sig)
+	if err != nil {
+		return errors.New("Invalid X-Hub-Signature")
+	}
+
+	return nil
 }
