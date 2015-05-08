@@ -62,7 +62,6 @@ directory=/tmp
 user=root
 stdout_logfile=/var/log/supervisor/webhook.stdout.log
 stderr_logfile=/var/log/supervisor/webhook.stderr.log
-
 ```
 
 Start:
@@ -102,6 +101,13 @@ server {
     }
 }
 ```
+
+## TODO
+
+- Write test
+- Support for multiple repositories
+- Binary distribution instead of repository cloning
+
 
 ## Author
 [Sho Mizutani](https://github.com/lowply)
