@@ -1,4 +1,4 @@
-package validate
+package main
 
 import (
 	"bytes"
@@ -8,12 +8,10 @@ import (
 	"errors"
 	"net/http"
 	"strings"
-
-	"github.com/lowply/webhook/config"
 )
 
 func validateXhubsig(b *bytes.Buffer, sig string) error {
-	c := config.GetConfig()
+	c := GetConfig()
 
 	xhubsig := strings.Replace(sig, "sha1=", "", -1)
 	key := c.Key

@@ -1,15 +1,13 @@
-package logger
+package main
 
 import (
 	"log"
 	"os"
 	"time"
-
-	"github.com/lowply/webhook/config"
 )
 
 func Log(t string) {
-	c := config.GetConfig()
+	c := GetConfig()
 	logfile := c.Logfile
 	const layout = "Jan 2, 2006 at 3:04pm (MST)"
 	datetime := time.Now().Format(layout)

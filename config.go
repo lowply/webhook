@@ -1,4 +1,4 @@
-package config
+package main
 
 import (
 	"io/ioutil"
@@ -18,7 +18,7 @@ type Config struct {
 
 func GetConfig() Config {
 	var c Config
-	path := "/etc/webhook.hcl"
+	path := "/Users/smizutan/Desktop/webhook.hcl"
 
 	// Fail if config does not exist
 	stat, err := os.Stat(path)
