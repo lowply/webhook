@@ -1,8 +1,7 @@
 # HCL file - https://github.com/hashicorp/hcl
-# Put this file in /etc/webhook.hcl
 
-bindaddress	= "" # 127.0.0.1
-bindport	= "" # 4000
-execfile	= "" # /tmp/script.sh
-logfile		= "" # /var/log/webhook.log
-key         = "" # GitHub webhook key
+bindaddress = "127.0.0.1"
+bindport    = "4000"
+execfile    = "/path/to/script.sh" # Make sure that the file is executable
+logfile     = "/var/log/webhook.log"
+key         = "" # GitHub webhook key. See https://developer.github.com/webhooks/securing/

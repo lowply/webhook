@@ -6,26 +6,35 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-func validateXhubsig(b *bytes.Buffer, sig string) error {
-	c := GetConfig()
+func validateXhubsig(r *http.Request, sig string, key string) error {
+	if r.Body == nil {
+		return errors.New("Empty request body")
+	}
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+	// restore r.Body drained by ioutil.ReadAll.
+	// https://medium.com/@xoen/golang-read-from-an-io-readwriter-without-loosing-its-content-2c6911805361
+	r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	xhubsig := strings.Replace(sig, "sha1=", "", -1)
-	key := c.Key
 	mac := hmac.New(sha1.New, []byte(key))
-	mac.Write(b.Bytes())
+	mac.Write(bodyBytes)
 
 	if hex.EncodeToString(mac.Sum(nil)) != xhubsig {
-		return errors.New("")
+		return errors.New("Hash calculation does not match to X-Hub-Signature")
 	}
 
 	return nil
 }
 
-func ValidateRequest(b *bytes.Buffer, r *http.Request) error {
+func ValidateRequest(r *http.Request, key string) error {
 	sig := r.Header.Get("X-Hub-Signature")
 
 	if r.Method != "POST" {
@@ -36,9 +45,9 @@ func ValidateRequest(b *bytes.Buffer, r *http.Request) error {
 		return errors.New("X-Hub-Signature is empty")
 	}
 
-	err := validateXhubsig(b, sig)
+	err := validateXhubsig(r, sig, key)
 	if err != nil {
-		return errors.New("Invalid X-Hub-Signature")
+		return err
 	}
 
 	return nil

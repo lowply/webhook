@@ -1,14 +1,19 @@
-
-all: run
+default: test
 
 run:
-	GO15VENDOREXPERIMENT=1 go run *.go
+	go run *.go
 
 build:
-	GO15VENDOREXPERIMENT=1 go build -o bin/webhook
+	go build -o bin/webhook
 
 install:
 	go install github.com/lowply/webhook
 
 install-linux:
 	GOOS=linux GOARCH=amd64 go install github.com/lowply/webhook
+
+test:
+	go test -v -parallel 5
+	
+vendor:
+	govend -v
