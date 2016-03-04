@@ -1,0 +1,7 @@
+vendors:
+- path: github.com/google/logger
+  rev: 97ba4c7c3cba487052aa4627abab7c6b2ce5cd59
+- path: github.com/hashicorp/hcl
+  rev: 1c284ec98f4b398443cbabb0d9197f7f4cc0077c
+- path: golang.org/x/sys
+  rev: 7a56174f0086b32866ebd746a794417edbc678a1

@@ -14,14 +14,14 @@ Config example:
 ```bash
 # /etc/webhook.hcl
 
-bindaddress     = "0.0.0.0" # be careful, this is just an example.
-bindport        = "4000"
-execfile        = "/home/pull.sh"
-logfile         = "/var/log/webhook.log"
-key             = "XXXXXXXXXXXXXXXXXXXX" # GitHub webhook key
+bindaddress	= "127.0.0.1"
+bindport	= "4000"
+execfile	= "/path/to/script.sh" # Make sure that the file is executable
+logfile		= "/var/log/webhook.log"
+key         = "XXXXXXXXXXXXXXXXXXXX" # GitHub webhook key. See https://developer.github.com/webhooks/securing/
 ```
 
-Script example:
+Example script for docker:
 ```bash
 #!/bin/bash
 
@@ -35,8 +35,6 @@ docker rm
 docker start
 ```
 
-With this config and script, your docker build and restart will be automated.
-
 ## Installation
 
 Just clone, build and run in the background. You will need to install git and go beforehand.
@@ -44,6 +42,8 @@ Just clone, build and run in the background. You will need to install git and go
 ```bash
 $ git clone https://github.com/lowply/webhook.git # clone it
 $ cd webhook
+$ go get -u github.com/govend/govend # If you don't have it
+$ govend
 $ go build main.go # build it
 $ cp webhook.hcl.tmpl /etc/webhook.hcl # copy it
 $ chmod 600 /etc/webhook.hcl # permission should be 600
