@@ -36,53 +36,33 @@ docker start
 ```
 
 ## Installation
-
-Just clone, build and run in the background. You will need to install git and go beforehand.
-
 ```bash
-$ git clone https://github.com/lowply/webhook.git # clone it
-$ cd webhook
-$ go get -u github.com/govend/govend # If you don't have it
-$ govend
-$ go build main.go # build it
-$ cp webhook.hcl.tmpl /etc/webhook.hcl # copy it
-$ chmod 600 /etc/webhook.hcl # permission should be 600
-$ vim /etc/webhook.hcl # update
-$ ./main & # run
+$ go get github.com/lowply/webhook
 ```
 
-However I recommend using supervisor to daemonize it, and setting up reverse proxy with nginx.
+## Start webhook server
+```bash
+$ webhook -g /etc/webhook.hcl # generate config template
+$ webhook # defalut config path is /etc/webhook.hcl
+```
+
+## Specify config path
+```bash
+$ webhook -c /path/to/webhook.hcl # if you need to specify path of config file
+```
+
+## Daemonize
+I recommend supervisor to daemonize webhook and setting up reverse proxy with nginx.
 
 Supervisor example:
 ```
 # /etc/supervisord.d/webhook.conf
 [program:webhook]
-command=/path/to/webhook/main
+command=[GOPATH]/bin/webhook # change GOPATH to yours
 directory=/tmp
 user=root
 stdout_logfile=/var/log/supervisor/webhook.stdout.log
 stderr_logfile=/var/log/supervisor/webhook.stderr.log
-```
-
-Start:
-```bash
-$ supervisorctl status
-$ supervisorctl reread
-webhook: available
-$ supervisorctl add webhook
-webhook: added process group
-$ supervisorctl status
-webhook                          RUNNING   pid 27606, uptime 0:00:02
-```
-Webhook example:
-```bash
-# /etc/webhook.hcl
-
-bindaddress     = "127.0.0.1"
-bindport        = "4000"
-execfile        = "/path/to/script.sh"
-logfile         = "/var/log/webhook.log"
-key             = "XXXXXXXXXXXXXXXXXXXX" # GitHub webhook key
 ```
 
 Nginx example:
@@ -106,8 +86,6 @@ server {
 
 - Write test
 - Support for multiple repositories
-- Binary distribution instead of repository cloning
-
 
 ## Author
 [Sho Mizutani](https://github.com/lowply)
