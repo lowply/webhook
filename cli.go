@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 )
@@ -31,8 +32,8 @@ func (cli *CLI) Run() int {
 	flags := flag.NewFlagSet("webhook", flag.ContinueOnError)
 	flags.SetOutput(cli.errStream)
 
-	flags.StringVar(&fl_config_path, "c", "", "[c]onfig: this is fl_config_path")
-	flags.StringVar(&fl_generate_path, "g", "", "[g]enerate: Generate config file to a path")
+	flags.StringVar(&fl_config_path, "c", "", "Path to the config file. Default value is /etc/webhook.hcl")
+	flags.StringVar(&fl_generate_path, "g", "", "Path to generate config template file. No default value.")
 	flags.BoolVar(&fl_version, "v", false, "Print version and quit.")
 
 	if err := flags.Parse(args[1:]); err != nil {
@@ -45,7 +46,17 @@ func (cli *CLI) Run() int {
 	}
 
 	if fl_generate_path != "" {
-		fmt.Println("do generate")
+		content := []byte(`# HCL file - https://github.com/hashicorp/hcl
+bindaddress = "127.0.0.1"
+bindport    = "4000"
+execfile    = "/path/to/script.sh" # Make sure that the file is executable
+logfile     = "/var/log/webhook.log"
+key         = "" # GitHub webhook key. See https://developer.github.com/webhooks/securing/
+`)
+		err := ioutil.WriteFile(fl_generate_path, content, 0600)
+		if err != nil {
+			log.Fatalf("Error writing a file: ", err)
+		}
 		return ExitCodeOK
 	}
 
