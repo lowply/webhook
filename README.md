@@ -16,7 +16,7 @@ Config example:
 
 bindaddress	= "127.0.0.1"
 bindport	= "4000"
-execfile	= "/path/to/script.sh" # Make sure that the file is executable
+execfile	= "/home/docker/pull.sh" # Make sure that the file is executable
 logfile		= "/var/log/webhook.log"
 key         = "XXXXXXXXXXXXXXXXXXXX" # GitHub webhook key. See https://developer.github.com/webhooks/securing/
 ```
@@ -25,7 +25,7 @@ Example script for docker:
 ```bash
 #!/bin/bash
 
-# /home/pull.sh
+# /home/docker/pull.sh
 
 cd $GOPATH/src/github.com/${1}
 git pull origin master
@@ -52,7 +52,7 @@ $ webhook -c /path/to/webhook.hcl # if you need to specify path of config file
 ```
 
 ## Daemonize
-I recommend supervisor to daemonize webhook and setting up reverse proxy with nginx.
+I recommend supervisor to daemonize webhook and setting up a reverse proxy with nginx.
 
 Supervisor example:
 ```
