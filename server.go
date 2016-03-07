@@ -41,13 +41,14 @@ func (self *Server) handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (self *Server) NewServer(config *Config) (*Server, error) {
-	self.bindAddress = config.BindAddress
-	self.bindPort = config.BindPort
-	self.execFile = config.Execfile
-	self.logFile = config.Logfile
-	self.key = config.Key
-	return self, nil
+func NewServer(config *Config) (*Server, error) {
+	s := &Server{}
+	s.bindAddress = config.BindAddress
+	s.bindPort = config.BindPort
+	s.execFile = config.Execfile
+	s.logFile = config.Logfile
+	s.key = config.Key
+	return s, nil
 }
 
 func (self *Server) Run() {

@@ -65,8 +65,7 @@ key         = "" # GitHub webhook key. See https://developer.github.com/webhooks
 		log.Fatalf("Error reading config: ", err)
 	}
 
-	s := &Server{}
-	server, err := s.NewServer(config)
+	server, err := NewServer(config)
 	if err != nil {
 		log.Fatalf("Error starting server: ", err)
 	}
